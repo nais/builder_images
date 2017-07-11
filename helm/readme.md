@@ -1,1 +1,1 @@
-Image containing helm with app registry plugin
+Image containing helm with app registry plugin.

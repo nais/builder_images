@@ -16,4 +16,6 @@ RUN curl -L https://github.com/app-registry/appr-helm-plugin/releases/download/v
     tar xzf - -C /root/.helm/plugins && \
     /bin/helm registry -h 
 
+RUN /bin/helm repo add nais https://nais.github.io/charts
+
 ENTRYPOINT ["/bin/helm"]

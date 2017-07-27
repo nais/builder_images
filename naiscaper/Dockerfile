@@ -6,11 +6,11 @@ RUN echo '@edge https://nl.alpinelinux.org/alpine/edge/main' >> /etc/apk/reposit
     apk add bash curl ca-certificates
 
 ENV HELM_VERSION="v2.5.0"
-
+ENV LANDSCAPER_VERSION="1.0.9"
 
 RUN curl -s https://storage.googleapis.com/kubernetes-helm/helm-${HELM_VERSION}-linux-amd64.tar.gz | tar -xz -C /tmp && mv /tmp/linux-amd64/helm /usr/bin
 RUN curl -s https://storage.googleapis.com/kubernetes-release/release/v1.6.6/bin/linux/amd64/kubectl > /usr/bin/kubectl && chmod +x /usr/bin/kubectl
-RUN curl -Ls https://github.com/Eneco/landscaper/releases/download/1.0.8/landscaper-1.0.8-linux-amd64.tar.gz | tar xzf - -C /usr/bin landscaper && chmod +x /usr/bin/landscaper
+RUN curl -Ls https://github.com/Eneco/landscaper/releases/download/${LANDSCAPER_VERSION}/landscaper-${LANDSCAPER_VERSION}-linux-amd64.tar.gz | tar xzf - -C /usr/bin landscaper && chmod +x /usr/bin/landscaper
 
 RUN /usr/bin/helm init --client-only && \
     mkdir -v -p /root/.kube && \

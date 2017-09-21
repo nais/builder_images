@@ -1,7 +1,7 @@
 FROM centos:latest
 MAINTAINER Johnny Horvi <johnny.horvi@gmail.com>
 
-ENV VERSION 2.5.0
+ENV VERSION 2.6.1
 
 RUN yum install -y wget
 

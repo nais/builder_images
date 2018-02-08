@@ -1,21 +1,24 @@
-FROM centos:latest
-MAINTAINER Johnny Horvi <johnny.horvi@gmail.com>
+FROM alpine:3.7
 
-ENV VERSION 2.6.1
+RUN apk upgrade --update && \
+    apk add bash curl
 
-RUN yum install -y wget
+ENV HELM_VERSION="v2.8.0"
+ENV HELM_PLUGIN_VERSION="v0.7.0"
 
-RUN curl http://storage.googleapis.com/kubernetes-helm/helm-v${VERSION}-linux-amd64.tar.gz | \
-    tar xzf - -C /tmp && \
-    cp /tmp/linux-amd64/helm /bin && \ 
-    rm -rf /tmp/linux-amd64
+CMD bash
 
-RUN /bin/helm init --client-only && /bin/helm repo update 
+RUN curl -Ls https://storage.googleapis.com/kubernetes-helm/helm-${HELM_VERSION}-linux-amd64.tar.gz | \
+    tar -xz -C /tmp && \
+    mv /tmp/linux-amd64/helm /usr/bin
 
-RUN curl -L https://github.com/app-registry/appr-helm-plugin/releases/download/v0.5.1/registry-helm-plugin.tar.gz | \
-    tar xzf - -C /root/.helm/plugins && \
-    /bin/helm registry -h 
+RUN /usr/bin/helm init --client-only && \
+    /usr/bin/helm repo update
 
-RUN /bin/helm repo add nais https://nais.github.io/charts
+RUN curl -Ls https://github.com/app-registry/appr-helm-plugin/releases/download/${HELM_PLUGIN_VERSION}/helm-registry_linux.tar.gz | \
+    tar -xz -C /root/.helm/plugins && \
+    /usr/bin/helm registry -h
 
-ENTRYPOINT ["/bin/helm"]
+RUN /usr/bin/helm repo add nais https://nais.github.io/charts
+
+ENTRYPOINT ["/usr/bin/helm"]

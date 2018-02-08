@@ -1,11 +1,9 @@
-FROM alpine
+FROM alpine:3.7
 
-RUN echo '@edge https://nl.alpinelinux.org/alpine/edge/main' >> /etc/apk/repositories && \
-    echo '@community https://nl.alpinelinux.org/alpine/edge/community' >> /etc/apk/repositories && \
-    apk upgrade --update && \
+RUN apk upgrade --update && \
     apk add bash curl ca-certificates
 
-ENV HELM_VERSION="v2.7.2"
+ENV HELM_VERSION="v2.8.0"
 ENV LANDSCAPER_VERSION="1.0.12"
 
 RUN curl -s https://storage.googleapis.com/kubernetes-helm/helm-${HELM_VERSION}-linux-amd64.tar.gz | tar -xz -C /tmp && mv /tmp/linux-amd64/helm /usr/bin

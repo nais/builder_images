@@ -1,13 +1,13 @@
-
 SHELL   := bash
-VERSION := latest
+VERSION := $(shell cat ./version)
 NAME    := navikt/glide
 IMAGE   := ${NAME}:${VERSION}
 
-dockerhub-release: docker-build push-dockerhub
+bump:
+	/bin/bash bump.sh
 
-docker-build:
-	docker image build -t ${IMAGE} -f Dockerfile .
+build:
+	docker image build -t ${NAME} -t ${IMAGE} .
 
-push-dockerhub:
+push:
 	docker image push ${IMAGE}

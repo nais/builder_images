@@ -1,0 +1,28 @@
+#!/bin/sh
+
+if test $# -ne 3 -o -d "$NAISCAPER_DIR"; then
+    echo "Usage: $0 <cluster_name> <namespace> <dir>"
+    exit 1
+fi
+
+WORK_DIR=/tmp/naiscaper
+CLUSTER=$1
+NAMESPACE=$2
+NAISCAPER_DIR=$3
+
+mkdir -p $WORK_DIR
+files=`ls $NAISCAPER_DIR/base/*.yaml $NAISCAPER_DIR/clusters/$CLUSTER/*.yaml | awk -F/ '{print $NF}' | sort | uniq`
+for file in $files; do
+    if test -s $NAISCAPER_DIR/base/$file -a -s $NAISCAPER_DIR/clusters/$CLUSTER/$file; then
+        echo $file: merging files
+        yq merge $NAISCAPER_DIR/clusters/$CLUSTER/$file $NAISCAPER_DIR/base/$file > $WORK_DIR/$file
+    elif test -s $NAISCAPER_DIR/base/$file; then
+        echo $file: using base file
+        cp $NAISCAPER_DIR/base/$file $WORK_DIR/
+    elif test -s $NAISCAPER_DIR/clusters/$CLUSTER/$file; then
+        echo $file: using cluster file
+        cp $NAISCAPER_DIR/clusters/$CLUSTER/$file $WORK_DIR/
+    fi
+done
+
+landscaper -v --env $CLUSTER --config-override-file $NAISCAPER_DIR/nais.yaml --context $CLUSTER --namespace $NAMESPACE apply $WORK_DIR/*.yaml

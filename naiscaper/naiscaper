@@ -25,4 +25,4 @@ for file in $files; do
     fi
 done
 
-landscaper -v --env $CLUSTER --config-override-file $NAISCAPER_DIR/nais.yaml --context $CLUSTER --namespace $NAMESPACE apply $WORK_DIR/*.yaml
+landscaper -v --env $CLUSTER --context $CLUSTER --namespace $NAMESPACE apply $WORK_DIR/*.yaml

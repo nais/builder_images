@@ -13,7 +13,7 @@ RUN curl -s https://storage.googleapis.com/kubernetes-helm/helm-${HELM_VERSION}-
 RUN curl -s https://storage.googleapis.com/kubernetes-release/release/v1.9.0/bin/linux/amd64/kubectl > /usr/bin/kubectl && \
     chmod +x /usr/bin/kubectl
 
-RUN curl -Ls https://github.com/Eneco/landscaper/releases/download/${LANDSCAPER_VERSION}/landscaper-${LANDSCAPER_VERSION}-linux-amd64.tar.gz | \
+RUN curl -Ls https://github.com/Eneco/landscaper/releases/download/v${LANDSCAPER_VERSION}/landscaper-${LANDSCAPER_VERSION}-linux-amd64.tar.gz | \
     tar xzf - -C /usr/bin landscaper && \
     chmod +x /usr/bin/landscaper
 

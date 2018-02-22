@@ -11,6 +11,7 @@ NAMESPACE=$2
 NAISCAPER_DIR=$3
 
 mkdir -p $WORK_DIR
+rm -f $WORK_DIR/*
 files=`ls $NAISCAPER_DIR/base/*.yaml $NAISCAPER_DIR/clusters/$CLUSTER/*.yaml | awk -F/ '{print $NF}' | sort | uniq`
 for file in $files; do
     if test -s $NAISCAPER_DIR/base/$file -a -s $NAISCAPER_DIR/clusters/$CLUSTER/$file; then

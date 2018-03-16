@@ -28,7 +28,7 @@ RUN /usr/bin/helm init --client-only && \
 
 # NAV specific proxy setup. Could be injected during docker run, but we have to add trust to the
 # proxy certificate anyway.
-COPY webproxy.crt /usr/local/share/ca-certificates/
+COPY webproxy.nav.no.cer /usr/local/share/ca-certificates/
 RUN update-ca-certificates 
 ENV HTTPS_PROXY=http://webproxy-utvikler.nav.no:8088 
 ENV NO_PROXY="localhost,127.0.0.1,.local,.adeo.no,.nav.no,.aetat.no,.devillo.no,.oera.no"

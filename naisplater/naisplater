@@ -1,0 +1,53 @@
+#!/bin/bash
+
+ENV="${1}"
+OUTPUT_DIR="out"
+VARS_DIR="vars"
+
+function main {
+    # recreate output dir
+    rm -rf "${OUTPUT_DIR}" && mkdir -p "${OUTPUT_DIR}"
+    
+    for FILE_PATH in files/*.yaml; do
+        FILE_NAME=$(basename "${FILE_PATH}")	
+        OUTPUT_FILE="${OUTPUT_DIR}/${FILE_NAME}"
+
+		_get_yaml "${FILE_NAME}" | gotpl "${FILE_PATH}" > "${OUTPUT_FILE}"
+		_check_for_unresolved "${OUTPUT_FILE}"
+		echo "-- generated file ${OUTPUT_FILE}:"
+		cat "${OUTPUT_FILE}"
+    done
+}
+
+function _check_for_unresolved {
+    local FILE="${1}"
+    if [[ $(grep -c "<no value>" "${FILE}") == "1" ]]; then
+        echo "error: found unresolved variable(s):"
+        grep -Hn "<no value>" "${FILE}"
+        exit 1
+    fi
+}
+
+function _get_yaml {
+    local FILE=${1}
+	BASE_FILE="${VARS_DIR}/base/${FILE}" 
+	ENV_OVERRIDE_FILE="${VARS_DIR}/${ENV}/${FILE}" 
+
+	# merge if both files exist
+	if [[  -f "${BASE_FILE}" &&  -f "${ENV_OVERRIDE_FILE}" ]]; then 
+		yq merge --overwrite "${BASE_FILE}" "${ENV_OVERRIDE_FILE}" 
+		return
+    fi	
+
+	if [[ -f "${BASE_FILE}" ]]; then
+		cat "${BASE_FILE}"
+		return
+	fi
+
+	if [[ -f "${ENV_OVERRIDE_FILE}" ]]; then
+        cat "${ENV_OVERRIDE_FILE}"
+		return
+    fi
+}
+
+main

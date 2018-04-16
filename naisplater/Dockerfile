@@ -1,4 +1,4 @@
-FROM golang:alpine AS go-getter
+FROM golang:1.10.1-alpine AS go-getter
 
 RUN apk upgrade --update && \
     apk add bash git

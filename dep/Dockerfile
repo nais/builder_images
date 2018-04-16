@@ -1,4 +1,4 @@
-FROM golang:1.9.4-alpine
+FROM golang:1.10.1-alpine
 
 RUN apk upgrade --update && \
     apk add bash curl git mercurial subversion bzr ca-certificates

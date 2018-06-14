@@ -3,7 +3,7 @@ FROM alpine:3.7
 RUN apk upgrade --update && \
     apk add bash curl ca-certificates
 
-ENV HELM_VERSION="v2.8.1"
+ENV HELM_VERSION="v2.9.1"
 ENV LANDSCAPER_VERSION="1.0.14"
 ENV KUBECTL_VERSION="1.9.2"
 ENV YQ_VERSION="1.14.0"

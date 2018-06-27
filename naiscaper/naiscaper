@@ -14,15 +14,17 @@ mkdir -p $WORK_DIR
 rm -f $WORK_DIR/*
 files=`ls $NAISCAPER_DIR/base/*.yaml $NAISCAPER_DIR/clusters/$CLUSTER/*.yaml | awk -F/ '{print $NF}' | sort | uniq`
 for file in $files; do
-    if test -s $NAISCAPER_DIR/base/$file -a -s $NAISCAPER_DIR/clusters/$CLUSTER/$file; then
-        echo $file: merging files
-        yq merge $NAISCAPER_DIR/clusters/$CLUSTER/$file $NAISCAPER_DIR/base/$file > $WORK_DIR/$file
-    elif test -s $NAISCAPER_DIR/base/$file; then
-        echo $file: using base file
-        cp $NAISCAPER_DIR/base/$file $WORK_DIR/
-    elif test -s $NAISCAPER_DIR/clusters/$CLUSTER/$file; then
-        echo $file: using cluster file
-        cp $NAISCAPER_DIR/clusters/$CLUSTER/$file $WORK_DIR/
+    if test ! -f $NAISCAPER_DIR/clusters/$CLUSTER/`basename $file .yaml`.ignore; then
+        if test -s $NAISCAPER_DIR/base/$file -a -s $NAISCAPER_DIR/clusters/$CLUSTER/$file; then
+            echo $file: merging files
+            yq merge $NAISCAPER_DIR/clusters/$CLUSTER/$file $NAISCAPER_DIR/base/$file > $WORK_DIR/$file
+        elif test -s $NAISCAPER_DIR/base/$file; then
+            echo $file: using base file
+            cp $NAISCAPER_DIR/base/$file $WORK_DIR/
+        elif test -s $NAISCAPER_DIR/clusters/$CLUSTER/$file; then
+            echo $file: using cluster file
+            cp $NAISCAPER_DIR/clusters/$CLUSTER/$file $WORK_DIR/
+        fi
     fi
 done
 

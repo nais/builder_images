@@ -1,7 +1,7 @@
 #!/bin/sh
 
-if test $# -ne 3; then
-    echo "Usage: $0 <cluster_name> <namespace> <dir>"
+if test $# -ne 3 -a $# -ne 4; then
+    echo "Usage: $0 <cluster_name> <namespace> <dir> [alternate_kube_context]"
     exit 1
 fi
 
@@ -9,6 +9,7 @@ WORK_DIR=/tmp/naiscaper
 CLUSTER=$1
 NAMESPACE=$2
 NAISCAPER_DIR=$3
+KUBE_CONTEXT=${4:-${1}}
 
 mkdir -p $WORK_DIR
 rm -f $WORK_DIR/*
@@ -28,4 +29,4 @@ for file in $files; do
     fi
 done
 
-landscaper -v --env $CLUSTER --context $CLUSTER --namespace $NAMESPACE apply $WORK_DIR/*.yaml
+landscaper -v --env $CLUSTER --context $KUBE_CONTEXT --namespace $NAMESPACE apply $WORK_DIR/*.yaml

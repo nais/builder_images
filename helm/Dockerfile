@@ -1,9 +1,9 @@
-FROM alpine:3.7
+FROM alpine:3.8
 
 RUN apk upgrade --update && \
     apk add bash curl
 
-ENV HELM_VERSION="v2.8.0"
+ENV HELM_VERSION="v2.10.0"
 ENV HELM_PLUGIN_VERSION="v0.7.0"
 
 CMD bash

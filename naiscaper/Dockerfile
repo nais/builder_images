@@ -1,5 +1,7 @@
 FROM alpine:3.8
 
+WORKDIR /root
+
 RUN apk upgrade --update && \
     apk add bash curl ca-certificates
 

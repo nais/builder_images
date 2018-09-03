@@ -26,7 +26,7 @@ RUN curl -Ls https://github.com/Eneco/landscaper/releases/download/v${LANDSCAPER
 
 RUN /usr/bin/helm init --client-only && \
     mkdir -v -p /root/.kube && \
-    /usr/bin/helm repo add nais https://nais.github.io/charts
+    /usr/bin/helm repo add nais https://nais.io/charts/
 
 # NAV specific proxy setup. Could be injected during docker run, but we have to add trust to the
 # proxy certificate anyway.

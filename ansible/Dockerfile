@@ -35,7 +35,8 @@ RUN set -x && \
     echo "==> Adding Python runtime..."  && \
     apk add --no-cache ${BUILD_PACKAGES} && \
     pip install --upgrade pip && \
-    pip install python-keyczar docker-py && \
+    pip install python-keyczar docker-py \
+    bigsuds f5-sdk && \
     \
     echo "==> Installing Ansible..."  && \
     pip install ansible==${ANSIBLE_VERSION} && \

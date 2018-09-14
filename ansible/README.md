@@ -35,3 +35,15 @@ Eksempel kjøring:
 ```
 ./ansible-playbook -i inventory/cluster playbooks/playbbook.yaml
 ```
+
+## Bygging
+
+Bygges manuelt, og Ansible-versjon spesifiseres i Dockerfile. Bruker både `latest` og versjon-tagg av images.
+
+```
+docker build -t navikt/ansible-playbook -t navikt/ansible-playbook:<version> .
+```
+
+```
+docker push navikt/ansible-playbook && docker push navikt/ansible-playbook:<version>
+```

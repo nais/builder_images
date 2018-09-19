@@ -6,6 +6,7 @@ ENV BUILD_PACKAGES \
   bash \
   curl \
   tar \
+  openssl \
   openssh-client \
   sshpass \
   git \

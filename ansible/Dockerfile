@@ -60,10 +60,6 @@ ENV PYTHONPATH /ansible/lib
 ENV PATH /ansible/bin:$PATH
 ENV ANSIBLE_LIBRARY /ansible/library
 
-RUN addgroup -g 992 jenkins
-RUN adduser -S -u 993 -G jenkins jenkins
-USER jenkins
-
 WORKDIR /ansible
 
 ENTRYPOINT ["ansible-playbook"]

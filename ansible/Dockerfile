@@ -59,6 +59,10 @@ ENV ANSIBLE_SSH_PIPELINING True
 ENV PYTHONPATH /ansible/lib
 ENV PATH /ansible/bin:$PATH
 ENV ANSIBLE_LIBRARY /ansible/library
+ENV ANSIBLE_LOCAL_TEMP /tmp
+
+RUN addgroup -g 992 jenkins
+RUN adduser -S -u 993 -G jenkins jenkins
 
 WORKDIR /ansible
 

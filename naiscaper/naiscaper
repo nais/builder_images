@@ -29,4 +29,4 @@ for file in $files; do
     fi
 done
 
-landscaper -v --env $CLUSTER --context $KUBE_CONTEXT --namespace $NAMESPACE apply $WORK_DIR/*.yaml
+landscaper apply $WORK_DIR/*.yaml -v --env $CLUSTER --context $KUBE_CONTEXT --namespace $NAMESPACE 

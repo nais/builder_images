@@ -6,8 +6,8 @@ RUN apk upgrade --update && \
     apk add bash curl ca-certificates
 
 ENV HELM_VERSION="v2.11.0"
-ENV LANDSCAPER_VERSION="1.0.21"
-ENV KUBECTL_VERSION="1.11.1"
+ENV LANDSCAPER_VERSION="1.0.16"
+ENV KUBECTL_VERSION="1.12.3"
 ENV YQ_VERSION="2.1.1"
 
 RUN curl -s https://storage.googleapis.com/kubernetes-helm/helm-${HELM_VERSION}-linux-amd64.tar.gz | \

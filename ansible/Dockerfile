@@ -37,7 +37,7 @@ RUN set -x && \
     apk add --no-cache ${BUILD_PACKAGES} && \
     pip install --upgrade pip && \
     pip install python-keyczar docker-py \
-    bigsuds f5-sdk netaddr && \
+    bigsuds f5-sdk netaddr dnspython && \
     \
     echo "==> Installing Ansible..."  && \
     pip install ansible==${ANSIBLE_VERSION} && \

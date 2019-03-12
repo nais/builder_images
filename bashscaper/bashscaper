@@ -16,6 +16,8 @@ naiscape() {
   local name
   local release_file
   local chart
+  local chart_name
+  local chart_version
   local values
   local existing_release
   local release_name
@@ -36,11 +38,18 @@ naiscape() {
   existing_release=$(echo "$releases" | $jq "select(.Name == \"${release_name}\" and .Namespace == \"${namespace}\")")
   $yq read "$release_file" 'configuration' > "$values"
   chart="$($yq read "$release_file" 'release.chart')"
+  if [[ "$chart" == *":"* ]]; then
+    chart_name=$(echo "$chart" | cut -d ':' -f 1)
+    chart_version=$(echo "$chart" | cut -d ':' -f 2)
+  else
+    chart_name="$chart"
+    chart_version="" # Empty == latest
+  fi
 
   if [[ -z $existing_release ]]; then
-    helm install "$chart" --name "$release_name" --wait --kube-context "$context" --namespace "$namespace" --values "$values" --dry-run
+    helm install "$chart_name" --name "$release_name" --wait --kube-context "$context" --namespace "$namespace" --values "$values" --version "$chart_version" --dry-run
   else
-    helm upgrade "$release_name" "$chart" --wait --kube-context "$context" --namespace "$namespace" --values "$values" --dry-run
+    helm upgrade "$release_name" "$chart_name" --wait --kube-context "$context" --namespace "$namespace" --values "$values" --version "$chart_version" --dry-run
   fi
 
   rm -f "$values"

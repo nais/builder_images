@@ -1,6 +1,6 @@
 SHELL   := bash
 VERSION := $(shell cat ./version)
-NAME    := navikt/naiscaper
+NAME    := navikt/bashscaper
 IMAGE   := ${NAME}:${VERSION}
 
 bump:

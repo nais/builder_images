@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+if [[ $# -lt 3 ]]; then
+  echo "Usage: $0 <namespace> <kube_context> <files...>"
+  exit 1
+fi
+
+namespace=$1
+context=$2
+
+jq=$(command -v jq)
+releases=$(helm list --kube-context "$context" --output json | $jq '.Releases[]')
+
+naiscape() {
+  local yq
+  local jq
+  local name
+  local release_file
+  local chart
+  local values
+  local existing_release
+  local release_name
+  local name_override
+
+  yq=$(command -v yq)
+  jq=$(command -v jq)
+
+  release_file="$1"
+  name=$(basename "$release_file" .yaml)
+  name_override="$($yq read "$release_file" 'name')"
+  if [[ ! ("$name_override" == "null" || -z "$name_override") ]]; then
+    name=$name_override
+  fi
+
+  values="$(mktemp)"
+  release_name="${namespace}-${name}"
+  existing_release=$(echo "$releases" | $jq "select(.Name == \"${release_name}\" and .Namespace == \"${namespace}\")")
+  $yq read "$release_file" 'configuration' > "$values"
+  chart="$($yq read "$release_file" 'release.chart')"
+
+  if [[ -z $existing_release ]]; then
+    helm install  "$chart" --name "$release_name" --wait --kube-context "$context" --namespace "$namespace" --values "$values" --dry-run
+  else
+    helm upgrade  "$release_name" "$chart" --wait --kube-context "$context" --namespace "$namespace" --values "$values" --dry-run
+  fi
+
+  rm -f "$values"
+}
+
+
+for release_file in "${@:3}"; do
+  echo "Processing $release_file"
+  naiscape "$release_file" "$1" "$2" "$releases"
+done

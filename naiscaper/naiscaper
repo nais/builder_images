@@ -1,84 +1,29 @@
 #!/usr/bin/env bash
-if test $# -ne 3 -a $# -ne 4; then
-  echo "Usage: $0 <cluster_name> <namespace> <dir> [alternate_kube_context]"
+if test $# -ne 3; then
+  echo "Usage: $0 <base_dir> <override_dir> <output_dir>"
   exit 1
 fi
 
-# Self contained function
-naiscape() {
-  local yq
-  local jq
-  local name
-  local chart
-  local values
-  local releasename
-  local existing
-  local name_override
-  local namespace
-  local context
-  local releases
-
-  yq=$(command -v yq)
-  jq=$(command -v jq)
-
-  name=$(basename "$1" .yaml)
-  name_override="$($yq read "$1" 'name')"
-  if [[ ! ("$name_override" == "null" || -z "$name_override") ]]; then
-    name=$name_override
-  fi
-
-  releases=$4
-  namespace=$3
-  context=$2
-
-  chart="$($yq read "$1" 'release.chart')"
-  values="$(mktemp)"
-  releasename="${namespace}-${name}"
-  existing=$(echo "$releases" | $jq "select(.Name == \"${releasename}\" and .Namespace == \"${namespace}\")")
-  $yq read "$1" 'configuration' > "$values"
-
-  if [[ -z $existing ]]; then
-    echo helm install "$chart" --kube-context "$context" --namespace "$namespace" --values "$values"
-  else
-    echo helm upgrade "$chart" --kube-context "$context" --namespace "$namespace" --values "$values"
-  fi
-
-  rm -f "$values"
-}
-
 yq=$(command -v yq)
-jq=$(command -v jq)
+base_dir=$1
+override_dir=$2
+output_dir=$3
 
-work_dir=/tmp/naiscaper
-cluster=$1
-namespace=$2
-naiscaper_dir=$3
-kube_context=${4:-${1}}
-releases=$(helm list --output json | $jq '.Releases[]')
-
-mkdir -p $work_dir
-rm -f $work_dir/*
-files=$(find "${naiscaper_dir}/base/" "${naiscaper_dir}/clusters/${cluster}" -iname "*.yaml" -exec basename {} \; | sort | uniq)
+mkdir -p "$output_dir"
+rm -f "$output_dir/*"
+files=$(find "${base_dir}" "${override_dir}" -iname "*.yaml" -exec basename {} \; | sort | uniq)
 
 for file in $files; do
-  if test ! -f "$naiscaper_dir/clusters/$cluster/$(basename "$file" .yaml).ignore"; then
-    if test -s "$naiscaper_dir/base/$file" -a -s "$naiscaper_dir/clusters/$cluster/$file"; then
+  if test ! -f "$override_dir/$(basename "$file" .yaml).ignore"; then
+    if test -s "$base_dir/$file" -a -s "$override_dir/$file"; then
       echo "$file": merging files
-      $yq merge "$naiscaper_dir/clusters/$cluster/$file" "$naiscaper_dir/base/$file" > "$work_dir/$file"
-    elif test -s "$naiscaper_dir"/base/"$file"; then
+      $yq merge "$override_dir/$file" "$base_dir/$file" > "$output_dir/$file"
+    elif test -s "$base_dir/$file"; then
       echo "$file": using base file
-      cp "$naiscaper_dir"/base/"$file" $work_dir/
-    elif test -s "$naiscaper_dir"/clusters/"$cluster"/"$file"; then
+      cp "$base_dir/$file" "$output_dir/"
+    elif test -s "$override_dir/$file"; then
       echo "$file": using cluster file
-      cp "$naiscaper_dir"/clusters/"$cluster"/"$file" $work_dir/
+      cp "$override_dir/$file" "$output_dir/"
     fi
   fi
 done
-
-
-echo "Applying state"
-for release_file in "$work_dir"/*.yaml; do
-  echo "$release_file"
-  naiscape "$release_file" "$kube_context" "$namespace" "$releases"
-done
-

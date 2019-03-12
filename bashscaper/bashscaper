@@ -38,9 +38,9 @@ naiscape() {
   chart="$($yq read "$release_file" 'release.chart')"
 
   if [[ -z $existing_release ]]; then
-    helm install  "$chart" --name "$release_name" --wait --kube-context "$context" --namespace "$namespace" --values "$values" --dry-run
+    helm install "$chart" --name "$release_name" --wait --kube-context "$context" --namespace "$namespace" --values "$values" --dry-run
   else
-    helm upgrade  "$release_name" "$chart" --wait --kube-context "$context" --namespace "$namespace" --values "$values" --dry-run
+    helm upgrade "$release_name" "$chart" --wait --kube-context "$context" --namespace "$namespace" --values "$values" --dry-run
   fi
 
   rm -f "$values"

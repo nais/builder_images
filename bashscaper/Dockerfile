@@ -32,7 +32,7 @@ RUN /usr/bin/helm init --client-only && \
 COPY webproxy.nav.no.cer /usr/local/share/ca-certificates/
 RUN update-ca-certificates 
 ENV HTTPS_PROXY=http://webproxy-utvikler.nav.no:8088 
-ENV NO_PROXY="localhost,127.0.0.1,.local,.adeo.no,.nav.no,.aetat.no,.devillo.no,.oera.no,.nais.io,155.55.190.30,155.55.190.31"
+ENV NO_PROXY="localhost,127.0.0.1,.local,.adeo.no,.nav.no,.aetat.no,.devillo.no,.oera.no,.dev-fss.nais.io,.dev-sbs.nais.io,.prod-fss.nais.io,.prod-sbs.nais.io,155.55.190.30,155.55.190.31"
 
 # We need to add the ca-file info to the repos, as latest Helm (> 2.10.0) dosen't work correctly with proxy-settings
 COPY helm-repositories.yaml /root/.helm/repository/repositories.yaml

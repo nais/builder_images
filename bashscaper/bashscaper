@@ -9,7 +9,6 @@ context=$2
 
 jq=$(command -v jq)
 yq=$(command -v yq)
-releases=$(helm list --kube-context "$context" --namespace "$namespace" --output json | $jq ".Releases[]")
 release_names=()
 
 bashscape() {
@@ -19,10 +18,8 @@ bashscape() {
   local chart_name
   local chart_version
   local values
-  local existing_release
   local release_name
   local name_override
-
 
   release_file="$1"
   name=$(basename "$release_file" .yaml)
@@ -34,7 +31,6 @@ bashscape() {
   values="$(mktemp)"
   release_name="${namespace}-${name}"
   release_names+=("$release_name")
-  existing_release=$(echo "$releases" | $jq "select(.Name == \"${release_name}\")")
   $yq read "$release_file" 'configuration' > "$values"
 
   chart="$($yq read "$release_file" 'release.chart')"
@@ -46,13 +42,7 @@ bashscape() {
     chart_version="" # Empty == latest
   fi
 
-  if [[ -z $existing_release ]]; then
-    echo "Installing $release_name"
-    helm install "$chart_name" --name "$release_name" --wait --kube-context "$context" --namespace "$namespace" --values "$values" --version "$chart_version"
-  else
-    echo "Upgrading $release_name"
-    helm upgrade "$release_name" "$chart_name" --wait --kube-context "$context" --namespace "$namespace" --values "$values" --version "$chart_version"
-  fi
+  helm upgrade "$release_name" "$chart_name" --wait --kube-context "$context" --namespace "$namespace" --values "$values" --version "$chart_version" --install
 
   rm -f "$values"
 }

@@ -11,3 +11,6 @@ repositories:
 - cache: /root/.helm/repository/cache/nais-index.yaml
   name: nais
   url: https://nais.github.io/charts
+- cache: /root/.helm/repository/cache/svc-cat-index.yaml
+  name: svc-cat
+  url: https://svc-catalog-charts.storage.googleapis.com

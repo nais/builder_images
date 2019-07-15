@@ -1,6 +1,6 @@
-FROM hashicorp/terraform:0.11.13
-ENV CLOUD_SDK_VERSION=240.0.0
-ENV KUBECTL_VERSION=v1.14.0
+FROM hashicorp/terraform:0.12.4
+ENV CLOUD_SDK_VERSION=253.0.0
+ENV KUBECTL_VERSION=v1.15.0
 
 RUN apk --no-cache --update add bash curl python jq
 

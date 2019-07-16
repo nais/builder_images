@@ -2,7 +2,7 @@ FROM hashicorp/terraform:0.12.4
 ENV CLOUD_SDK_VERSION=253.0.0
 ENV KUBECTL_VERSION=v1.15.0
 
-RUN apk --no-cache --update add bash curl python jq
+RUN apk --no-cache --update add bash curl python jq python3
 
 ENV PATH /google-cloud-sdk/bin:$PATH
 RUN curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz && \

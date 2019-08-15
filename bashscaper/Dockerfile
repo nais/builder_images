@@ -5,8 +5,8 @@ WORKDIR /root
 RUN apk upgrade --update && \
     apk add bash curl ca-certificates
 
-ENV HELM_VERSION="v2.11.0"
-ENV KUBECTL_VERSION="1.12.6"
+ENV HELM_VERSION="v2.14.3"
+ENV KUBECTL_VERSION="1.15.2"
 ENV YQ_VERSION="2.2.1"
 ENV JQ_VERSION="1.6"
 

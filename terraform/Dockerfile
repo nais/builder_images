@@ -1,6 +1,6 @@
 FROM hashicorp/terraform:0.12.4
-ENV CLOUD_SDK_VERSION=253.0.0
-ENV KUBECTL_VERSION=v1.15.0
+ENV CLOUD_SDK_VERSION=258.0.0
+ENV KUBECTL_VERSION=v1.15.2
 
 RUN apk --no-cache --update add bash curl python jq python3
 
@@ -12,6 +12,7 @@ RUN curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cl
       gcloud config set core/disable_usage_reporting true && \
       gcloud config set component_manager/disable_update_check true && \
       gcloud config set metrics/environment github_docker_image && \
+      gcloud components install beta && \
       gcloud --version
 
 RUN curl -L https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl -o /usr/local/bin/kubectl && chmod +x /usr/local/bin/kubectl

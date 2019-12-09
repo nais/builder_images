@@ -1,4 +1,4 @@
-FROM hashicorp/terraform:0.12.4
+FROM hashicorp/terraform:0.12.15
 ENV CLOUD_SDK_VERSION=258.0.0
 ENV KUBECTL_VERSION=v1.15.2
 

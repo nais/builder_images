@@ -14,3 +14,6 @@ repositories:
 - cache: /root/.helm/repository/cache/svc-cat-index.yaml
   name: svc-cat
   url: https://svc-catalog-charts.storage.googleapis.com
+- cache: /root/.helm/repository/cache/snyk-charts-index.yaml
+  name: snyk-charts
+  url: https://snyk.github.io/kubernetes-monitor/

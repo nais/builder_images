@@ -27,7 +27,7 @@ RUN /usr/bin/helm init --client-only && \
     mkdir -v -p /root/.kube && \
     /usr/bin/helm repo add nais https://nais.io/charts/ && \
     /usr/bin/helm repo add rook-release https://charts.rook.io/release && \
-    /usr/bin/helm repo add snyk-charts https://snyk.github.io/kubernetes-monitor
+    /usr/bin/helm repo add snyk-charts https://snyk.github.io/kubernetes-monitor/
 
 # NAV specific proxy setup. Could be injected during docker run, but we have to add trust to the
 # proxy certificate anyway.

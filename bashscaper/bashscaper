@@ -51,7 +51,7 @@ bashscape() {
 purge_old_releases() {
   local releases_after_bashscape
   local release_name
-  releases_after_bashscape=$(helm list --kube-context "$context" --namespace "$namespace" --output json | $jq -r ".Releases[] | .Name")
+  releases_after_bashscape=$(helm list --kube-context "$context" --namespace "$namespace" --output json | $jq -r ".[].name")
 
   for release_name in $releases_after_bashscape; do
     if [[ " ${release_names[*]} " == *" ${release_name} "* ]]; then
@@ -60,7 +60,7 @@ purge_old_releases() {
     fi
 
     echo "release $release_name present, but shouldn't be. Removing"
-    helm delete --kube-context "$context" --purge "$release_name"
+    helm delete --kube-context "$context" "$release_name"
   done
 }
 

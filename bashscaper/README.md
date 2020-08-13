@@ -24,5 +24,9 @@ configuration:
 - `release` specified which helm chart to install
 - `configuration` is the helm values
 
+# Versions
+
+Note that from version 16.0.0 helm v3 is used. Don't change to this version without migrating already installed charts.
+
 # Example
 See [nais-tpa](https://github.com/navikt/nais-tpa)

@@ -43,7 +43,7 @@ bashscape() {
     chart_version="" # Empty == latest
   fi
 
-  helm upgrade "$release_name" "$chart_name" --wait --timeout 600s --kube-context "$context" --namespace "$namespace" --values "$values" --version "$chart_version" --install
+  helm upgrade "$release_name" "$chart_name" --history-max 5 --wait --timeout 600s --kube-context "$context" --namespace "$namespace" --values "$values" --version "$chart_version" --install
 
   rm -f "$values"
 }

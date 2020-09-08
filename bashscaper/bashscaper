@@ -1,4 +1,4 @@
-#/usr/bin/env bash
+#!/usr/bin/env bash
 set -e
 if [[ $# -lt 3 ]]; then
   echo "Usage: $0 <namespace> <kube_context> <files...>"

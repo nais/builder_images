@@ -24,7 +24,7 @@ bashscape() {
 
   release_file="$1"
   name=$(basename "$release_file" .yaml)
-  name_override="$($yq read "$release_file" 'name')"
+  name_override="$($yq e '.name' "$release_file")"
   if [[ ! ("$name_override" == "null" || -z "$name_override") ]]; then
     name=$name_override
   fi
@@ -32,9 +32,9 @@ bashscape() {
   values="$(mktemp)"
   release_name="${namespace}-${name}"
   release_names+=("$release_name")
-  $yq read "$release_file" 'configuration' > "$values"
+  $yq e '.configuration' "$release_file" > "$values"
 
-  chart="$($yq read "$release_file" 'release.chart')"
+  chart="$($yq e '.release.chart' "$release_file")"
   if [[ "$chart" == *":"* ]]; then
     chart_name=$(echo "$chart" | cut -d ':' -f 1)
     chart_version=$(echo "$chart" | cut -d ':' -f 2)

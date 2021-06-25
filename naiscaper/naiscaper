@@ -18,7 +18,7 @@ for file in $files; do
   if test ! -f "$override_dir/$(basename "$file" .yaml).ignore"; then
     if test -s "$base_dir/$file" -a -s "$override_dir/$file"; then
       echo "$file": merging files
-      $yq merge "$override_dir/$file" "$base_dir/$file" > "$output_dir/$file"
+      $yq eval-all 'select(fileIndex == 0) * select(fileIndex == 1)' "$override_dir/$file" "$base_dir/$file" > "$output_dir/$file"
     elif test -s "$base_dir/$file"; then
       echo "$file": using base file
       cp "$base_dir/$file" "$output_dir/"

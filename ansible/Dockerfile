@@ -47,7 +47,8 @@ RUN set -x && \
     rm -rf /var/cache/apk/* && \
     \
     echo "==> Adding hosts for convenience..."  && \
-    mkdir -p /etc/ansible /ansible && \
+    mkdir -p /etc/ansible /ansible /data/runner && \
+    chmod 0777 /data/runner && \
     echo "[local]" >> /etc/ansible/hosts && \
     echo "localhost" >> /etc/ansible/hosts
 
@@ -60,9 +61,6 @@ ENV PYTHONPATH /ansible/lib
 ENV PATH /ansible/bin:$PATH
 ENV ANSIBLE_LIBRARY /ansible/library
 ENV ANSIBLE_LOCAL_TEMP /tmp
-
-RUN addgroup -g 992 jenkins
-RUN adduser -S -u 993 -G jenkins jenkins
 
 WORKDIR /ansible
 

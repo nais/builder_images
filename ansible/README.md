@@ -7,43 +7,41 @@ Based on [walokra/docker-ansible-playbook](https://github.com/walokra/docker-ans
 
 ## Hvordan
 
-Selve imaget kjører `ansible-playbook`, så man kan subsidere `ansible-playbook` i terminalen med:
+Selve imaget kjører `ansible-playbook`, så man kan bytte `ansible-playbook` i terminalen med:
 
 ```
-docker run --rm -it -v PATH_TO_LOCAL_PLAYBOOKS_DIR:/ansible/playbooks navikt/ansible-playbook PLAYBOOK_FILE
+docker run --rm -it -v PATH_TO_LOCAL_PLAYBOOKS_DIR:/ansible/playbooks navikt/naisible-playbook PLAYBOOK_FILE
 ```
 
 
 ### Shell-script
 
-For å gjøre det enklere for Jenkins, og andre byggeverktøy, kan det være kjekt å pakke alt inn i et shell-script.
+For å gjøre det enklere for byggeverktøy, kan det være kjekt å pakke alt inn i et shell-script.
 
 Eksempel script:
 ```
 #!/bin/bash
 docker run --rm -it \
   -v /var/log/ansible/ansible.log \
-  -v /var/lib/jenkins/.ssh:/home/jenkins/.ssh \
+  -v /var/lib/github-runner/.ssh:/home/github-runner/.ssh \
   -v "$(pwd)"/naisible:/ansible/playbooks \
   -v "$(pwd)"/nais-inventory:/ansible/inventory \
   -e F5_USER \
   -e F5_PASSWORD \
-  navikt/ansible-playbook "$@"
+  navikt/naisible-playbook "$@"
 ```
 
 Eksempel kjøring:
 ```
-./ansible-playbook -i inventory/cluster playbooks/playbbook.yaml
+./naisible-playbook -i inventory/cluster playbooks/playbook.yaml
 ```
 
 ## Bygging
 
-Bygges manuelt, og Ansible-versjon spesifiseres i Dockerfile. Bruker både `latest` og versjon-tagg av images.
+Kjør 
+```
+docker login ghcr.io -p <PAT>
+make
+```
 
-```
-docker build -t navikt/ansible-playbook -t navikt/ansible-playbook:<version> .
-```
-
-```
-docker push navikt/ansible-playbook && docker push navikt/ansible-playbook:<version>
-```
+Image lastes opp til ghcr.io/nais/naisible-playbook
